@@ -1,0 +1,14 @@
+range T = 1..10
+range RESERVED = 0..1
+set VarAlpha = {value.{show[RESERVED],assign[RESERVED],
+		       acquire,release}
+	       }
+SEAT[j:RESERVED] = (display -> show[j] -> SEAT[j]
+				|reserve -> if j == 0 then assign -> SEAT[1] 
+								else ocupied -> SEAT[j] 
+					)
+
+CLIENT = choose[T] -> CLIENT
+EMPLOYEE = (display -> EMPLOYEE
+			|reserve ->
+			)  

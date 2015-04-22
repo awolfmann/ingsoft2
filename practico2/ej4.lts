@@ -1,0 +1,14 @@
+const NUM_SAL = 2
+const M = 2
+
+SALVAJE = (	servir -> comer ->SALVAJE
+			|esperar -> SALVAJE
+			).
+
+OLLA = OLLA[M],
+OLLA[i:0..M] = (when (i>0) servir -> OLLA[i-1]
+				| when (i==0) llenar -> OLLA[M]).
+
+COCINERO = (llenar -> COCINERO).
+
+||TRIBU = ([0..NUM_SAL]:SALVAJE||OLLA||COCINERO).

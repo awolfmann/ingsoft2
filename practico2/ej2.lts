@@ -1,0 +1,13 @@
+const N = 2
+const M = 2
+RESOURCE(K=2) = COUNT[0][0],
+COUNT[i:0..K][j:0..1] = (when(i<K & j==0) get->COUNT[i+1][j] 
+						| when (i>0) finish->COUNT[i-1][j]
+						| when(i==0 & j==0) start-> COUNT[i][j+1]
+						| when (j==1) end-> COUNT[i][j-1]).
+READER = (get->read->finish->READER).
+WRITER = (start->write->end->WRITER).
+
+||BOUNDEDRESOURCE = ([0..N]:READER||RESOURCE(2)||[0..M]:WRITER)
+                       /{[0..N].get/get, [0..N].finish/finish, [0..M].start/start, [0..N].end/end}.
+

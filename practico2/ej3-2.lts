@@ -1,0 +1,26 @@
+const NUM_SEATS = 1
+const NUM_EMPLOYEES = 1
+range RESERVED = 0..1
+set VarAlpha = {show[RESERVED],assign[RESERVED], acquire, release}
+
+SEAT = SEAT[0],
+SEAT[j:RESERVED] = (display -> show[j]-> SEAT[j]
+					|reserve -> (when (j==0) assign[1] -> SEAT[1] 
+								|when (j==1) busy -> SEAT[j]) 
+					)+VarAlpha.
+
+RESERVE = (acquire -> reserve -> release ->RESERVE).
+DISPLAY = (acquire -> display -> release->DISPLAY).
+
+||THEATER = (employee.[0..NUM_EMPLOYEES]:RESERVE||employee.[0..NUM_EMPLOYEES]:DISPLAY||employee.[0..NUM_EMPLOYEES]::[0..NUM_SEATS]:SEAT)
+			/{
+				employee.[0..NUM_EMPLOYEES].acquire/acquire, 
+				employee.[0..NUM_EMPLOYEES].reserve/reserve,
+				employee.[0..NUM_EMPLOYEES].display/display,
+				employee.[0..NUM_EMPLOYEES].release/release
+			}.
+
+CLIENT = (choose[T] -> CLIENT).
+EMPLOYEE = (display -> EMPLOYEE
+			|reserve -> EMPLOYEE
+			).  

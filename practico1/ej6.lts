@@ -1,0 +1,7 @@
+range T = 0..9
+SENSOR = SENSOR[5],
+SENSOR[i:T] = 	( when (i<2) bajo -> SENSOR[i]
+				| when (i>8) alto -> SENSOR[i]
+				| when(i>=2 && i<=8) normal -> SENSOR[i]
+				| sense[u:T] -> SENSOR[u]
+				).

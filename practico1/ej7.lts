@@ -1,0 +1,14 @@
+range T = 0..100
+EXPEND = EXPEND[0],
+EXPEND[i:T] = 	(cinco -> EXPEND[i+5]
+				|diez -> EXPEND[i+10]
+				|veinte -> EXPEND[i+20]
+				|when (i>=15) lata -> DEVOLVER [i-15] 
+				|when (i<15) falta -> EXPEND[i]
+				),
+
+DEVOLVER[i:T] = (when (i==5) cinco -> DEVOLVER[i-5]
+				|when (i==10) diez -> DEVOLVER[i-10]
+				|when (i>=20) veinte -> DEVOLVER[i-20]
+				|when (i==0) vuelto -> EXPEND[0]
+				).

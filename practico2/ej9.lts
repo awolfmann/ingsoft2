@@ -1,0 +1,18 @@
+range BOOL = 0..1
+
+CLIENTE = (compra -> (aceptar->CLIENTE
+					|rechazar->CLIENTE)).
+
+LIBRERIA = (compra -> comprobar ->
+					(tarj -> edit -> aceptar -> LIBRERIA
+					|rechazar -> LIBRERIA)).
+
+TARJETA = (comprobar->(fondos_disp -> tarj ->TARJETA
+						|fondos_insuf ->TARJETA)
+			).
+
+EDITORIAL = (comprobar->(disponible -> edit ->EDITORIAL
+						|agotado->EDITORIAL)
+			).
+
+||VENTA = (CLIENTE||LIBRERIA||TARJETA||EDITORIAL).

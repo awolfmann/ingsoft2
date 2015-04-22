@@ -1,0 +1,19 @@
+/*Ejercico 3*/
+
+MEETING = (hello -> converse -> goodbye -> STOP).
+
+JOB = (arrive -> work -> leave -> JOB).
+
+MOVIE = (ahead -> (left -> STOP | right -> MOVIE)).
+
+GAME = ({one, two} -> win -> GAME | tree -> lose -> GAME).
+
+// ||CHICO = GAME.
+
+FOURTICK (N=4) = FOURTICK[0],
+FOURTICK[i:0..N] = ( when(i<N) tick -> FOURTICK[i+1]).
+
+DOUBLE = ( in[i:1..3] -> out[i] -> DOUBLE).
+ 
+
+PERSON = (weekend-> sleep -> {play,shop} -> PERSON| week->sleep -> work -> PERSON).

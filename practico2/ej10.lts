@@ -1,0 +1,19 @@
+const N = 2
+
+PELUQUERIA = PELUQUERIA[2][N],
+PELUQUERIA[peluq:0..2][sillas:0..N] = (when (peluq>0 && sillas==N) llega_cliente -> atender -> PELUQUERIA[peluq-1][sillas]
+										|when (peluq==0 && sillas>0) llega_cliente -> sienta -> PELUQUERIA[peluq][sillas-1]
+										|when (peluq==0 && sillas==0) llega_cliente -> retira_cliente->PELUQUERIA[peluq][sillas]
+										|retira_cliente->PELUQUERIA[peluq+1][sillas]
+										|when (peluq>0 && sillas<N) atender -> PELUQUERIA[peluq-1][sillas+1]). 
+
+PELUQUERO = (atender->PELUQUERO
+			|siesta->PELUQUERO
+			).
+
+CLIENTE = (llega_cliente->(atender->retira_cliente-> CLIENTE
+							|sienta->atender-> retira_cliente-> CLIENTE
+							|retira_cliente->CLIENTE)
+			).
+
+||

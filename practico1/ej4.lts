@@ -1,0 +1,5 @@
+range T = 0..2 
+VARIABLE = VARIABLE[0],
+VARIABLE[i:T] = (read[i] -> VARIABLE[i]
+				|write[u:T] -> VARIABLE[u]
+				). 
