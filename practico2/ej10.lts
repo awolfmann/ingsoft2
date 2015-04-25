@@ -1,19 +1,44 @@
 const N = 2
+const MAX= 3
 
-PELUQUERIA = PELUQUERIA[2][N],
-PELUQUERIA[peluq:0..2][sillas:0..N] = (when (peluq>0 && sillas==N) llega_cliente -> atender -> PELUQUERIA[peluq-1][sillas]
-										|when (peluq==0 && sillas>0) llega_cliente -> sienta -> PELUQUERIA[peluq][sillas-1]
-										|when (peluq==0 && sillas==0) llega_cliente -> retira_cliente->PELUQUERIA[peluq][sillas]
-										|retira_cliente->PELUQUERIA[peluq+1][sillas]
-										|when (peluq>0 && sillas<N) atender -> PELUQUERIA[peluq-1][sillas+1]). 
+/*PELUQUERIA = PELUQUERIA[2][N],
+*PELUQUERIA[peluq:0..2][sillas:0..N] = (when (peluq>0 && sillas==N) llega_cliente -> atender -> PELUQUERIA[peluq-1][sillas]
+*										|when (peluq==0 && sillas>0) llega_cliente -> sienta -> PELUQUERIA[peluq][sillas-1]
+*										|when (peluq==0 && sillas==0) llega_cliente -> retira_cliente->PELUQUERIA[peluq][sillas]
+*										|retira_cliente->PELUQUERIA[peluq+1][sillas]
+*										|when (peluq>0 && sillas<N) atender -> PELUQUERIA[peluq-1][sillas+1]). 
+*
+*/
 
-PELUQUERO = (atender->PELUQUERO
-			|siesta->PELUQUERO
+
+/*servidor - consumidor*/
+PELUQUERO = (atiende_pelado->PELUQUERO
+			|atiende_peludo->PELUQUERO
 			).
 
-CLIENTE = (llega_cliente->(atender->retira_cliente-> CLIENTE
-							|sienta->atender-> retira_cliente-> CLIENTE
-							|retira_cliente->CLIENTE)
+||PELUQUEROS = ([0..1]:PELUQUERO).
+
+/*buffer*/
+SILLAS = SILLAS[0][0],
+SILLAS[p:0..MAX][q:0..MAX] = (when (p+q<MAX) llega_peludo->sienta_peludo->SILLAS[p+1][q]
+								|when (p+q==MAX) llega_peludo->retira_peludo->SILLAS[p][q]	
+								|when (p+q<MAX) llega_pelado ->sienta_pelado->SILLAS[p][q+1]
+								|when (p+q==MAX) llega_pelado->retira_pelado->SILLAS[p][q]
+								|when (q>0) atiende_pelado->retira_pelado->SILLAS[p][q-1]
+								|when (p>0 && q==0) atiende_peludo->retira_peludo->SILLAS[p-1][q]  
+						). 
+
+/*cliente*/
+CLIENTE = (llega_peludo->(sienta_peludo->atiende_peludo->retira_peludo-> CLIENTE
+						|retira_peludo->CLIENTE)
+			|llega_pelado->(sienta_pelado->atiende_pelado->retira_pelado->CLIENTE
+						|retira_pelado->CLIENTE)
 			).
 
-||
+||PELUQUERIA = ([0..1]::SILLAS||[0..1]:PELUQUERO||[0..1]::CLIENTE).
+/*			/{[0..1].atiende_pelado/atiende_pelado,
+*				[0..1].atiende_peludo/atiende_peludo
+*				}. 
+*/ 
+
+

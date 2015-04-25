@@ -1,14 +1,23 @@
-range T = 1..10
-range RESERVED = 0..1
-set VarAlpha = {value.{show[RESERVED],assign[RESERVED],
-		       acquire,release}
-	       }
-SEAT[j:RESERVED] = (display -> show[j] -> SEAT[j]
-				|reserve -> if j == 0 then assign -> SEAT[1] 
-								else ocupied -> SEAT[j] 
-					)
+const MAX_SEATS = 0
+const NUM_EMP = 0
+range BOOL = 0..1
 
-CLIENT = choose[T] -> CLIENT
-EMPLOYEE = (display -> EMPLOYEE
-			|reserve ->
-			)  
+SEAT = SEAT[1], /*available*/
+SEAT[j:BOOL] = (display[j] -> SEAT[j]
+					|reserve -> SEAT[0]).
+
+LOCK = (acquire->release->LOCK).
+
+||LOCKSEAT = (SEAT||LOCK).
+
+||SEATS = ([0..MAX_SEATS]:LOCKSEAT).
+
+EMPLOYEE=(pedido[i:0..MAX_SEATS]->[i].acquire->[i].display[s:BOOL]->
+			(when (s==1) [i].reserve->[i].release->reserve_ok->EMPLOYEE
+			|when (s==0) [i].release->reserve_fail->EMPLOYEE)
+		).
+
+
+||EMPLOYEES = ([0..NUM_EMP]:EMPLOYEE).
+
+||THEATER = (EMPLOYEES||[0..NUM_EMP]::SEATS).

@@ -1,0 +1,20 @@
+const MAX = 10
+
+/* ASCENSOR = ASCENSOR[0],
+* ASCENSOR[pers:0..MAX] = (when (pers<MAX) enter-> ASCENSOR[pers+1]
+* 						|when (pers>0) exit -> ASCENSOR[pers-1]
+* 						).
+*/
+ASCENSOR1 = ASCENSOR1[0],
+ASCENSOR1[pers:0..MAX] = (enter-> ASCENSOR1[pers+1]
+						|exit -> ASCENSOR1[pers-1]
+						).
+
+property ASCENSOR = ASCENSOR[0],
+ASCENSOR[pers:0..MAX] = (when (pers<MAX) enter-> ASCENSOR[pers+1]
+						|exit -> ASCENSOR[pers-1]
+						).
+
+||CHECK = (ASCENSOR1||ASCENSOR).
+
+/*LTL G(nrpers<=10)*/

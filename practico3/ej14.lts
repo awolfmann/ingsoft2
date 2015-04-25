@@ -1,0 +1,23 @@
+const True = 1    
+const False = 0
+range Bool = False..True
+set BoolActions ={setTrue,setFalse,[False],[True]}
+   
+BOOLVAR = VAL[False],
+VAL[v:Bool] = ( setTrue -> VAL[True]
+              | setFalse -> VAL[False]
+              | [v] -> VAL[v]
+              ).
+||FLAGS = (flag1:BOOLVAR||flag2:BOOLVAR).
+
+NEIGHBOOR = NEIGHBOOR[False][False],
+NEIGHBOOR[v:Bool][j:Bool] = ([v] -> (when (v==False) enter->setTrue->inside->NEIGHBOOR[True][True]
+							|when (v==True) wait->NEIGHBOOR[True][False]
+							)
+					|when (j==True) get_out->setFalse->out->NEIGHBOOR[False][False]
+			)+BoolActions.
+/*leer bandera del otro y escribir propia*/
+/*:: para procesos simetricos que se comuniquen con un mismo proceso*/
+||NEIGHBOORS = (n1:NEIGHBOOR||n2:NEIGHBOOR).
+
+||FIELD = (NEIGHBOORS||FLAGS).
