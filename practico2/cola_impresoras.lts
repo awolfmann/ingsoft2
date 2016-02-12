@@ -1,0 +1,31 @@
+const M = 2 /*capacidad de la cola*/
+const N = 1 /*num de impresoras*/
+const K = 2 /*num procesos*/
+const MAX = 2*M+N
+
+COLA(TAM=M) = COLA[0],
+COLA[i:0..TAM] = (when (i>0) desencolar -> COLA[i-1]
+				|when (i<TAM) encolar -> COLA[i+1]
+				| when (i==0) vacia -> COLA[i]
+				).
+
+||COLAS = ({l,c}:COLA).
+
+IMPRESORA = ({l,c}.desencolar->imprimir->IMPRESORA).
+
+||IMPRESORAS = ([0..N]:IMPRESORA).
+
+PROCESO = ({l,c}.encolar->PROCESO).
+
+||PROCESOS = ([0..K]:PROCESO).
+
+||SISTEMA = (COLAS||IMPRESORAS||PROCESOS)/
+		{[0..N].{l,c}.desencolar/{l,c}.desencolar,
+		[0..K].{l,c}.encolar/{l,c}.encolar
+		}.
+
+property P = SAFE[0],
+SAFE[i:0..MAX] = (when (i<MAX) [0..K].{l,c}.encolar -> SAFE[i+1]
+					|[0..N].{l,c}.desencolar -> SAFE[i-1]
+				).
+||CHECK = (SISTEMA||P). 

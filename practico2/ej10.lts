@@ -24,18 +24,18 @@ SILLAS[p:0..MAX][q:0..MAX] = (when (p+q<MAX) llega_peludo->sienta_peludo->SILLAS
 								|when (p+q==MAX) llega_peludo->retira_peludo->SILLAS[p][q]	
 								|when (p+q<MAX) llega_pelado ->sienta_pelado->SILLAS[p][q+1]
 								|when (p+q==MAX) llega_pelado->retira_pelado->SILLAS[p][q]
-								|when (q>0) atiende_pelado->retira_pelado->SILLAS[p][q-1]
-								|when (p>0 && q==0) atiende_peludo->retira_peludo->SILLAS[p-1][q]  
+								|when (q>0) {m,f}.atiende_pelado->retira_pelado->SILLAS[p][q-1]
+								|when (p>0 && q==0) {m,f}.atiende_peludo->retira_peludo->SILLAS[p-1][q]  
 						). 
 
 /*cliente*/
-CLIENTE = (llega_peludo->(sienta_peludo->atiende_peludo->retira_peludo-> CLIENTE
+CLIENTE = (llega_peludo->(sienta_peludo->{m,f}.atiende_peludo->retira_peludo-> CLIENTE
 						|retira_peludo->CLIENTE)
-			|llega_pelado->(sienta_pelado->atiende_pelado->retira_pelado->CLIENTE
+			|llega_pelado->(sienta_pelado->{m,f}.atiende_pelado->retira_pelado->CLIENTE
 						|retira_pelado->CLIENTE)
 			).
 
-||PELUQUERIA = ([0..1]::SILLAS||[0..1]:PELUQUERO||[0..1]::CLIENTE).
+||PELUQUERIA = (SILLAS||{m,f}:PELUQUERO||CLIENTE).
 /*			/{[0..1].atiende_pelado/atiende_pelado,
 *				[0..1].atiende_peludo/atiende_peludo
 *				}. 

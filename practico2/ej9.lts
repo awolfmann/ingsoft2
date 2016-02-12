@@ -1,18 +1,21 @@
 range BOOL = 0..1
+const MAX_CLIENTE = 2
 
 CLIENTE = (compra -> (aceptar->CLIENTE
 					|rechazar->CLIENTE)).
 
 LIBRERIA = (compra -> comprobar ->
-					(tarj -> edit -> aceptar -> LIBRERIA
-					|rechazar -> LIBRERIA)).
-
-TARJETA = (comprobar->(fondos_disp -> tarj ->TARJETA
-						|fondos_insuf ->TARJETA)
+					(aceptar -> LIBRERIA
+					|rechazar_edit ->rechazar -> LIBRERIA
+					|rechazar_tarj ->rechazar -> LIBRERIA)
 			).
 
-EDITORIAL = (comprobar->(disponible -> edit ->EDITORIAL
-						|agotado->EDITORIAL)
+TARJETA = (comprobar->(fondos_disp -> aceptar ->TARJETA
+						|fondos_insuf->rechazar_tarj ->TARJETA)
 			).
 
-||VENTA = (CLIENTE||LIBRERIA||TARJETA||EDITORIAL).
+EDITORIAL = (comprobar->(disponible -> aceptar ->EDITORIAL
+						|agotado->rechazar_edit->EDITORIAL)
+			).
+
+||VENTA = ([0..MAX_CLIENTE]:CLIENTE||[0..MAX_CLIENTE]::LIBRERIA||[0..MAX_CLIENTE]::TARJETA||[0..MAX_CLIENTE]::EDITORIAL).
